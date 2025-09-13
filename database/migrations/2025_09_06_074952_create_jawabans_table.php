@@ -26,7 +26,7 @@ return new class extends Migration
                 ->cascadeOnDelete();
 
             // Jawaban fleksibel
-            $table->text('teks')->nullable(); 
+            $table->text('teks')->nullable();
 
             // Relasi ke opsi jawaban (radio)
             $table->foreignUuid('opsi_id')
