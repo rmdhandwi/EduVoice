@@ -8,68 +8,61 @@ import { Head } from '@inertiajs/vue3';
         <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
     </Head>
 
-    <div class="flex min-h-screen items-center justify-center bg-gradient-to-b from-[#fdfdfc] to-[#f6f6f4] p-4">
-        <div class="relative w-full max-w-4xl overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl">
-            
+    <div
+        class="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 p-4 dark:from-gray-950 dark:via-gray-900 dark:to-gray-800"
+    >
+        <div
+            class="relative w-full max-w-3xl overflow-hidden rounded-3xl border border-white/30 bg-white/60 shadow-2xl backdrop-blur-xl transition-colors duration-300 dark:border-gray-700 dark:bg-gray-900/70"
+        >
             <!-- Header -->
-            <header class="border-b border-gray-200 p-6">
-                <!-- Mobile (logo kiri & kanan di atas) -->
-                <div class="flex items-center justify-center gap-6 sm:hidden">
-                    <img src="img/logo_kota.png" alt="Logo Jayapura" class="h-14" />
-                    <img src="img/logo_berakhlak.png" alt="Logo BerAKHLAK" class="h-12" />
-                </div>
-                <!-- Judul mobile -->
-                <div class="mt-4 text-center sm:mt-0 sm:hidden">
-                    <h1 class="text-base font-bold leading-tight text-gray-900">DINAS PENDIDIKAN DAN KEBUDAYAAN</h1>
-                    <h2 class="text-sm font-semibold text-gray-700">KOTA JAYAPURA</h2>
+            <header class="border-b border-gray-200 p-6 dark:border-gray-700">
+                <!-- Mobile -->
+                <div class="flex flex-col items-center gap-4 sm:hidden">
+                    <div class="flex gap-6">
+                        <img src="img/logo_kota.png" alt="Logo Jayapura" class="h-14" />
+                        <img src="img/logo_berakhlak.png" alt="Logo BerAKHLAK" class="h-12" />
+                    </div>
+                    <div class="text-center">
+                        <h1 class="text-base leading-tight font-bold text-gray-900 dark:text-gray-100">DINAS PENDIDIKAN DAN KEBUDAYAAN</h1>
+                        <h2 class="text-sm font-semibold text-gray-700 dark:text-gray-300">KOTA JAYAPURA</h2>
+                    </div>
                 </div>
 
-                <!-- Desktop (logo - judul - logo) -->
+                <!-- Desktop -->
                 <div class="hidden items-center justify-between sm:flex">
                     <img src="img/logo_kota.png" alt="Logo Jayapura" class="h-16" />
                     <div class="flex-1 text-center">
-                        <h1 class="text-lg font-bold leading-tight text-gray-900">DINAS PENDIDIKAN DAN KEBUDAYAAN</h1>
-                        <h2 class="text-md font-semibold text-gray-700">KOTA JAYAPURA</h2>
+                        <h1 class="text-lg leading-tight font-bold text-gray-900 dark:text-gray-100">DINAS PENDIDIKAN DAN KEBUDAYAAN</h1>
+                        <h2 class="text-md font-semibold text-gray-700 dark:text-gray-300">KOTA JAYAPURA</h2>
                     </div>
                     <img src="img/logo_berakhlak.png" alt="Logo BerAKHLAK" class="h-14" />
                 </div>
             </header>
 
             <!-- Konten -->
-            <main class="relative p-6 text-center space-y-4">
-                <!-- Ilustrasi di belakang -->
-                <img 
-                    src="img/ilustrasi.png" 
-                    alt="Ilustrasi" 
-                    class="absolute bottom-0 right-0 w-48 opacity-10 pointer-events-none select-none"
-                />
+            <main class="relative flex flex-col items-center space-y-6 p-10 text-center">
+                <!-- Ilustrasi dekoratif -->
+                <img src="img/ilustrasi.png" alt="Ilustrasi" class="pointer-events-none absolute -right-10 -bottom-10 w-56 opacity-10 select-none" />
 
                 <!-- Teks -->
-                <p class="text-xl font-semibold text-gray-800 leading-relaxed tracking-wide">
-                    Mari Bantu Kami untuk Meningkatkan <br class="hidden sm:block" />
+                <p class="text-xl leading-relaxed font-semibold tracking-wide text-gray-800 dark:text-gray-200">
+                    Mari Bantu Kami untuk Meningkatkan
+                    <br class="hidden sm:block" />
                     Kualitas Pelayanan
                 </p>
-                <p class="text-2xl font-extrabold text-gray-900">DISDIKBUD KOTA JAYAPURA</p>
-                <p class="text-base font-medium text-gray-700">Dengan mengisi</p>
-                <p class="text-2xl font-bold text-gray-900 tracking-tight">Survei Kepuasan Masyarakat</p>
+                <p class="text-2xl font-extrabold text-gray-900 dark:text-gray-100">DISDIKBUD KOTA JAYAPURA</p>
+                <p class="text-base font-medium text-gray-700 dark:text-gray-300">Dengan Mengisi</p>
+                <p class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Survei Kepuasan Masyarakat</p>
 
-                <!-- QR Code + Link -->
-                <div class="mt-6 flex flex-col items-center gap-3">
-                    <img src="qrcode.png" alt="QR Code" class="h-40 w-40 rounded-lg shadow-md" />
+                <!-- Tombol masuk -->
+                <div class="mt-6 flex flex-col items-center gap-4">
                     <a
-                        :href="route('login')"
-                        class="rounded-full bg-gray-900 px-6 py-2 font-semibold text-white shadow transition hover:bg-gray-700"
+                        :href="route('user.kuesioner.index')"
+                        class="rounded-full bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-3 text-lg font-semibold text-white shadow-lg transition-all duration-300 hover:scale-[1.05] hover:from-blue-700 hover:to-purple-700 active:scale-95"
                     >
-                        SCAN DI SINI
+                        Mulai Survei
                     </a>
-                    <p class="text-sm text-gray-600">Atau kunjungi link:</p>
-                    <a 
-                        href="https://disdikbud.go.id/SKM" 
-                        target="_blank" 
-                        class="font-medium text-gray-900 underline hover:text-gray-700"
-                    >
-                        disdikbud.go.id/SKM
-                    </a>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Klik tombol di atas untuk melanjutkan</p>
                 </div>
             </main>
         </div>

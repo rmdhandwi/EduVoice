@@ -13,6 +13,10 @@ import PrimeVue from 'primevue/config';
 import ConfirmationService from 'primevue/confirmationservice';
 import ToastService from 'primevue/toastservice';
 
+import { ArcElement, BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, Title, Tooltip } from 'chart.js';
+
+ChartJS.register(Title, Tooltip, Legend, BarElement, LineElement, CategoryScale, LinearScale, ArcElement);
+
 // Custom theme preset
 const MyPreset = definePreset(Aura, {
     semantic: {
@@ -21,7 +25,7 @@ const MyPreset = definePreset(Aura, {
             100: '#dbeafe',
             200: '#bfdbfe',
             300: '#93c5fd',
-            400: '#60a5fa', 
+            400: '#60a5fa',
             500: '#3b82f6',
             600: '#2563eb',
             700: '#1d4ed8',
@@ -32,7 +36,7 @@ const MyPreset = definePreset(Aura, {
     },
 });
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const appName = import.meta.env.VITE_APP_NAME || 'EduVoice';
 
 createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),

@@ -17,10 +17,11 @@ class Pertanyaan extends Model
         'kuesioner_id',
         'teks',
         'tipe',
+        'unsur',
         'created_at',
         'updated_at'
     ];
-    
+
     public $timestamps = true;
 
     public function kuesioner()
@@ -28,7 +29,7 @@ class Pertanyaan extends Model
         return $this->belongsTo(Kuesioner::class, 'kuesioner_id');
     }
 
-    public function opsiJawabans()
+    public function opsiJawaban()
     {
         return $this->hasMany(OpsiJawaban::class, 'pertanyaan_id');
     }

@@ -58,13 +58,7 @@ const prefix = role === 'admin' ? 'admin.' : role === 'kepala' ? 'kepala.' : '';
 // helper resolve route
 const resolveRoute = (name: string, global: boolean = false) => {
     if (global) return route(name); // route global tanpa prefix
-
-    // jika nama sudah ada prefix, langsung return
-    if (name.startsWith('admin.') || name.startsWith('kepala.')) {
-        return route(name);
-    }
-
-    // tambahkan prefix otomatis
+    if (name.startsWith('admin.') || name.startsWith('kepala.')) return route(name);
     return route(prefix + name);
 };
 
@@ -76,17 +70,26 @@ const home = {
 </script>
 
 <template>
-    <Toast class="z-99" />
-    <div class="flex min-h-screen w-full bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+    <Toast class="z-[9999]" />
+
+    <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
         <!-- Sidebar -->
         <Sidebar :is-open="sidebarOpen" @toggle="toggleSidebar" />
 
         <!-- Main -->
-        <div :class="['flex flex-1 flex-col transition-all duration-300', sidebarOpen ? 'ml-64' : 'ml-20']">
+        <div
+            :class="[
+                'flex flex-1 flex-col transition-all duration-300',
+                // hanya kasih margin kiri di desktop
+                sidebarOpen ? 'md:ml-64' : 'md:ml-20',
+                'ml-0',
+            ]"
+        >
+            <!-- Header -->
             <Header @toggle="toggleSidebar" />
 
             <!-- Breadcrumb + Title -->
-            <div class="flex flex-col gap-2 px-6 py-4 sm:flex-row sm:items-center sm:justify-between dark:border-gray-700">
+            <div class="flex flex-col gap-2 border-b border-gray-200 px-6 py-4 sm:flex-row sm:items-center sm:justify-between dark:border-gray-700">
                 <!-- Judul Halaman -->
                 <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">
                     {{ props.title }}
@@ -114,9 +117,10 @@ const home = {
             </div>
 
             <!-- Content -->
-            <main class="flex-1 overflow-y-auto p-6">
+            <main class="flex-1 p-6">
                 <slot />
             </main>
         </div>
     </div>
 </template>
+

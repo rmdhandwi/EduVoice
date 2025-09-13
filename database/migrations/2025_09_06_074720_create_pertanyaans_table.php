@@ -20,7 +20,28 @@ return new class extends Migration
                 ->cascadeOnDelete();
 
             $table->text('teks');
-            $table->enum('tipe', ['text', 'number', 'radio', 'checkbox', 'date'])->default('text');
+
+            $table->enum('tipe', [
+                'text',
+                'radio',
+                'chackbox',
+                'number',
+                'date',
+            ])->default('text');
+
+            // enum unsur pelayanan
+            $table->enum('unsur', [
+                'Persyaratan Pelayanan',
+                'Prosedur Pelayanan',
+                'Kecepatan Pelayanan',
+                'Kewajaran Biaya Pelayanan',
+                'Kesesuaian Produk Layanan',
+                'Kemampuan Petugas Pelayanan',
+                'Kesopanan Petugas Layanan',
+                'Kualitas Sarana Prasarana',
+                'Penanganan Pengaduan',
+            ])->nullable();
+
             $table->timestamps();
         });
     }

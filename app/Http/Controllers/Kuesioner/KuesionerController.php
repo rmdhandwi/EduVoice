@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Kuesioner;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Kuesioner\StoreKuesionerRequest;
+use App\Http\Requests\Kuesioner\KuesionerRequest;
 use App\Http\Requests\Kuesioner\UpdateKuesionerRequest;
 use App\Models\Kuesioner;
 use App\Services\KuesionerService;
@@ -35,42 +35,19 @@ class KuesionerController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Kuesioner $kuesioner)
     {
-        return Inertia::render('admin/kuesioner/Kelola');
+        return Inertia::render('admin/kuesioner/Pertanyaan');
     }
 
-    public function store(StoreKuesionerRequest $request)
+    public function store(KuesionerRequest $request)
     {
-        $data = $request->validated();
-
+        $validate = $request->validated();
 
         try {
             DB::beginTransaction();
 
-            // Simpan Kuesioner
-            $kuesioner = Kuesioner::create([
-                'judul' => $data['judul'],
-                'deskripsi' => $data['deskripsi'] ?? null,
-            ]);
-
-            // Simpan Pertanyaan
-            foreach ($data['pertanyaans'] as $q) {
-                $pertanyaan = $kuesioner->pertanyaans()->create([
-                    'teks' => $q['teks'],
-                    'tipe' => $q['tipe'],
-                ]);
-
-                // Simpan Opsi jika ada
-                if (!empty($q['opsi'])) {
-                    foreach ($q['opsi'] as $opsi) {
-                        $pertanyaan->opsiJawabans()->create([
-                            'teks' => $opsi['teks'],
-                            'skor' => $opsi['skor'],
-                        ]);
-                    }
-                }
-            }
+            Kuesioner::create($validate);
 
             DB::commit();
 
@@ -88,14 +65,18 @@ class KuesionerController extends Controller
     }
 
 
-
     /**
      * Display the specified resource.
      */
-    public function show(kuesioner $kuesioner)
+    public function show(Kuesioner $kuesioner)
     {
-        //
+        $data = $this->service->getDetailForView($kuesioner);
+
+        return inertia('admin/kuesioner/Detail', [
+            'kuesioner' => $data,
+        ]);
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -113,45 +94,28 @@ class KuesionerController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateKuesionerRequest $request, Kuesioner $kuesioner)
+    public function update(KuesionerRequest $request, Kuesioner $kuesioner)
     {
-        $data = $request->validated();
+        $validate = $request->validated();
 
-        DB::transaction(function () use ($kuesioner, $data) {
-            // Update kuesioner
-            $kuesioner->update([
-                'judul' => $data['judul'],
-                'deskripsi' => $data['deskripsi'] ?? null,
-            ]);
+        try {
+            DB::beginTransaction();
 
-            // Hapus pertanyaan & opsi lama
-            $kuesioner->pertanyaans()->each(function ($pertanyaan) {
-                $pertanyaan->opsiJawabans()->delete();
-            });
-            $kuesioner->pertanyaans()->delete();
+            $kuesioner->update($validate);
 
-            // Simpan ulang pertanyaan baru
-            foreach ($data['pertanyaans'] as $q) {
-                $pertanyaan = $kuesioner->pertanyaans()->create([
-                    'teks' => $q['teks'],
-                    'tipe' => $q['tipe'],
-                ]);
+            DB::commit();
 
-                // ✅ hanya simpan opsi kalau tipe radio/checkbox
-                if (in_array($q['tipe'], ['radio', 'checkbox']) && !empty($q['opsi'])) {
-                    foreach ($q['opsi'] as $opsi) {
-                        $pertanyaan->opsiJawabans()->create([
-                            'teks' => $opsi['teks'],
-                            'skor' => $opsi['skor'] ?? 0,
-                        ]);
-                    }
-                }
-            }
-        });
+            return redirect()
+                ->route('admin.kuesioner.index')
+                ->with('success', 'Kuesioner berhasil diperbarui');
+        } catch (\Throwable $e) {
+            DB::rollBack();
 
-        return redirect()
-            ->route('admin.kuesioner.index')
-            ->with('success', 'Kuesioner berhasil diperbarui');
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 
 
@@ -165,20 +129,6 @@ class KuesionerController extends Controller
             return redirect()->back()->with('success', 'Kuesioner berhasil dihapus');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Gagal menghapus kuesioner');
-        }
-    }
-
-    public function bulkDestroy(Request $request)
-    {
-        try {
-            $ids = $request->input('ids', []);
-            if (!empty($ids)) {
-                Kuesioner::whereIn('id', $ids)->delete();
-            }
-
-            return redirect()->back()->with('success', count($ids) . ' kuesioner berhasil dihapus');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal menghapus data');
         }
     }
 }

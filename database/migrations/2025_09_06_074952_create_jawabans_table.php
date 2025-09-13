@@ -26,15 +26,9 @@ return new class extends Migration
                 ->cascadeOnDelete();
 
             // Jawaban fleksibel
-            $table->text('teks')->nullable();       // untuk tipe text
-            $table->integer('angka')->nullable();   // untuk tipe number
-            $table->date('tanggal')->nullable();    // untuk tipe date
+            $table->text('teks')->nullable(); 
 
-            // Kritik & Saran (khusus pertanyaan statis)
-            $table->text('saran')->nullable();
-            $table->text('kritik')->nullable();
-
-            // Relasi ke opsi jawaban (radio/checkbox)
+            // Relasi ke opsi jawaban (radio)
             $table->foreignUuid('opsi_id')
                 ->nullable()
                 ->constrained('opsi_jawabans')

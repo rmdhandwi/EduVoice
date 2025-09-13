@@ -9,33 +9,38 @@ class Jawaban extends Model
 {
     use HasUuids;
 
+    protected $table = 'jawabans';
     public $incrementing = false;
     protected $keyType = 'string';
-    protected $table = 'jawabans';
     protected $primaryKey = 'id';
 
     protected $fillable = [
         'pertanyaan_id',
-        'repondens_id',
+        'respondens_id',
         'teks',
-        'angka',
-        'tanggal',
-        'saran',
-        'kritik',
         'opsi_id',
+        'created_at',
+        'updated_at'
     ];
 
-    public function pertanyaans()
+    protected $casts = [
+        'tanggal' => 'date',
+    ];
+
+    public $timestamps = true;
+
+
+    public function pertanyaan()
     {
         return $this->belongsTo(Pertanyaan::class, 'pertanyaan_id');
     }
 
-    public function respondens()
+    public function responden()
     {
-        return $this->belongsTo(User::class, 'repondens_id');
+        return $this->belongsTo(Responden::class, 'respondens_id');
     }
 
-    public function opsiJawabans()
+    public function opsiJawaban()
     {
         return $this->belongsTo(OpsiJawaban::class, 'opsi_id');
     }

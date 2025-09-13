@@ -22,7 +22,7 @@ class OpsiJawaban extends Model
     ];
     public $timestamps = true;
 
-    public function pertanyaans()
+    public function pertanyaan()
     {
         return $this->belongsTo(Pertanyaan::class, 'pertanyaan_id');
     }
