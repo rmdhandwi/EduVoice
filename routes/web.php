@@ -48,6 +48,7 @@ Route::prefix('admin/kuesioner')
         Route::post('/', [KuesionerController::class, 'store'])->name('store');
         Route::get('/{kuesioner}', [KuesionerController::class, 'show'])->name('show');
         Route::put('/{kuesioner}', [KuesionerController::class, 'update'])->name('update');
+        Route::delete('/{kuesioner}', [KuesionerController::class, 'destroy'])->name('destroy');
     });
 
 Route::prefix('admin/kuesioner/{kuesioner}/pertanyaan')

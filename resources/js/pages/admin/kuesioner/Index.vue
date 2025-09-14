@@ -165,7 +165,7 @@ const deleteOne = (id: number) => {
                 class="group relative transform rounded-2xl bg-white p-6 shadow-lg transition hover:scale-[1.02] hover:shadow-xl dark:bg-gray-800"
             >
                 <!-- Action buttons -->
-                <div class="absolute top-4 right-4 flex gap-2 opacity-0 transition group-hover:opacity-100">
+                <div class="absolute top-4 right-4 flex gap-2">
                     <Button icon="pi pi-pencil" size="small" rounded variant="text" aria-label="Edit" @click="openEdit(k)" />
                     <Button icon="pi pi-trash" variant="text" severity="danger" aria-label="Hapus" size="small" @click="deleteOne(k.id)" rounded />
                 </div>

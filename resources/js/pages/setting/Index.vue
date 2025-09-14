@@ -54,7 +54,7 @@ const breadcrumb = [{ label: 'Setting', route: 'settings.index', global: true }]
         >
             <!-- Profile Tab -->
             <template #profile>
-                <div class="mx-auto max-w-5xl space-y-6 rounded-2xl bg-white p-6 shadow dark:bg-gray-800">
+                <div class="mx-auto max-w-5xl space-y-6 rounded-2xl bg-white animate-fade-in delay-300 p-6 shadow dark:bg-gray-800">
                     <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
                         <!-- Kiri: Detail -->
                         <div class="space-y-6">
@@ -187,3 +187,29 @@ const breadcrumb = [{ label: 'Setting', route: 'settings.index', global: true }]
         </Tabs>
     </DashboardLayout>
 </template>
+
+<style scoped>
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.animate-fade-in {
+    animation: fade-in 0.8s ease-out both;
+}
+.delay-100 {
+    animation-delay: 0.1s;
+}
+.delay-200 {
+    animation-delay: 0.2s;
+}
+.delay-300 {
+    animation-delay: 0.3s;
+}
+</style>
+

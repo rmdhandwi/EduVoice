@@ -27,34 +27,25 @@ type FormErrors = typeof form.errors;
 const isStepValid = (step: string) => {
     if (step === '1') {
         return (
-            form.name.trim() !== '' &&
-            form.jk !== '' &&
-            form.umur !== null &&
-            form.pekerjaan.trim() !== '' &&
-            form.pendidikan_terakhir.trim() !== '' &&
-            !form.errors.name &&
-            !form.errors.jk &&
-            !form.errors.umur &&
-            !form.errors.pekerjaan &&
-            !form.errors.pendidikan_terakhir
+            form.name.trim() !== '' && form.jk !== '' && form.umur !== null && form.pekerjaan.trim() !== '' && form.pendidikan_terakhir.trim() !== ''
         );
     }
     if (step === '2') {
         return kuesioner?.pertanyaan?.every((p: any, idx: number) => {
             if (p.tipe === 'radio') {
-                return form.jawaban[idx].opsi_id !== null && !form.errors[`jawaban.${idx}.opsi_id`];
+                return form.jawaban[idx].opsi_id !== null;
             }
             if (p.tipe === 'checkbox') {
-                return form.jawaban[idx].opsi_id.length > 0 && !form.errors[`jawaban.${idx}.opsi_id`];
+                return form.jawaban[idx].opsi_id.length > 0;
             }
             if (p.tipe === 'text') {
-                return form.jawaban[idx].teks.trim() !== '' && !form.errors[`jawaban.${idx}.teks`];
+                return form.jawaban[idx].teks.trim() !== '';
             }
             if (p.tipe === 'number') {
-                return form.jawaban[idx].angka !== null && !form.errors[`jawaban.${idx}.angka`];
+                return form.jawaban[idx].angka !== null;
             }
             if (p.tipe === 'date') {
-                return form.jawaban[idx].tanggal !== null && !form.errors[`jawaban.${idx}.tanggal`];
+                return form.jawaban[idx].tanggal !== null;
             }
             return true;
         });
@@ -399,237 +390,272 @@ function toggleSaran(id: number | string) {
             </div>
 
             <div v-else>
-                <h1 class="mb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-center text-3xl font-extrabold text-transparent">
-                    {{ kuesioner.judul }}
-                </h1>
-                <p class="mb-6 text-center text-gray-600 dark:text-gray-300">
-                    {{ kuesioner.deskripsi }}
-                </p>
-
                 <div class="card mx-auto max-w-3xl bg-white p-6 shadow-md dark:bg-gray-800">
-                    <ManualStepper
-                        ref="stepper"
-                        :steps="[
-                            { value: '1', label: 'Data Responden' },
-                            { value: '2', label: 'Pertanyaan' },
-                            { value: '3', label: 'Kritik & Saran' },
-                        ]"
+                    <div
+                        v-if="!kuesioner.pertanyaan || kuesioner.pertanyaan.length === 0"
+                        class="flex flex-col items-center justify-center py-10 text-center text-gray-600 dark:text-gray-300"
                     >
-                        <template #default="{ step, goTo }">
-                            <!-- Step 1 -->
-                            <div v-if="step === '1'" class="space-y-6">
-                                <div class="flex flex-col gap-1">
-                                    <IftaLabel>
-                                        <InputText
-                                            id="name"
-                                            v-model="form.name"
-                                            :invalid="!!form.errors.name"
-                                            class="w-full"
-                                            placeholder="Masukkan Nama"
-                                            variant="filled"
-                                        />
-                                        <label for="name">Nama</label>
-                                    </IftaLabel>
-                                    <Message v-if="form.errors.name" size="small" variant="simple" severity="error">{{ form.errors.name }}</Message>
-                                </div>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="mb-4 h-12 w-12 text-gray-400"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M13 16h-1v-4h-1m1-4h.01M12 20c4.418 0 
+                     8-3.582 8-8s-3.582-8-8-8-8 
+                     3.582-8 8 3.582 8 8 8z"
+                            />
+                        </svg>
+                        <h2 class="text-lg font-semibold">Kuesioner Belum Tersedia</h2>
+                        <p class="mt-2 text-sm">
+                            Mohon maaf, kuesioner ini belum memiliki pertanyaan.<br />
+                            Silakan datang kembali nanti.
+                        </p>
+                    </div>
 
-                                <div class="flex flex-col gap-1">
-                                    <label>Jenis Kelamin</label>
-                                    <div class="mt-1 flex flex-col gap-4">
-                                        <div class="flex gap-2">
-                                            <RadioButton inputId="jkL" value="Laki-Laki" v-model="form.jk" :invalid="!!form.errors.jk" />
-                                            <label for="jkL">Laki-Laki</label>
-                                        </div>
-                                        <div class="flex gap-2">
-                                            <RadioButton inputId="jkP" value="Perempuan" v-model="form.jk" :invalid="!!form.errors.jk" />
-                                            <label for="jkP">Perempuan</label>
-                                        </div>
-                                    </div>
-                                    <Message v-if="form.errors.jk" size="small" variant="simple" severity="error">{{ form.errors.jk }}</Message>
-                                </div>
+                    <template v-else>
+                        <h1
+                            class="mb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-center text-3xl font-extrabold text-transparent"
+                        >
+                            {{ kuesioner.judul }}
+                        </h1>
+                        <p class="mb-6 text-center text-gray-600 dark:text-gray-300">
+                            {{ kuesioner.deskripsi }}
+                        </p>
 
-                                <div class="flex flex-col gap-1">
-                                    <IftaLabel>
-                                        <InputNumber
-                                            v-model="form.umur"
-                                            :invalid="!!form.errors.umur"
-                                            class="w-full"
-                                            placeholder="Masukkan Umur"
-                                            variant="filled"
-                                        />
-                                        <label>Umur</label>
-                                    </IftaLabel>
-                                    <Message v-if="form.errors.umur" size="small" variant="simple" severity="error">{{ form.errors.umur }}</Message>
-                                </div>
-
-                                <div class="flex flex-col gap-1">
-                                    <IftaLabel>
-                                        <InputText
-                                            v-model="form.pekerjaan"
-                                            :invalid="!!form.errors.pekerjaan"
-                                            class="w-full"
-                                            placeholder="Masukkan Pekerjaan"
-                                            variant="filled"
-                                        />
-                                        <label>Pekerjaan</label>
-                                    </IftaLabel>
-                                    <Message v-if="form.errors.pekerjaan" size="small" variant="simple" severity="error">
-                                        {{ form.errors.pekerjaan }}
-                                    </Message>
-                                </div>
-
-                                <div class="flex flex-col gap-1">
-                                    <IftaLabel>
-                                        <InputText
-                                            v-model="form.pendidikan_terakhir"
-                                            :invalid="!!form.errors.pendidikan_terakhir"
-                                            class="w-full"
-                                            placeholder="Masukkan Pendidikan Terakhir"
-                                            variant="filled"
-                                        />
-                                        <label>Pendidikan Terakhir</label>
-                                    </IftaLabel>
-                                    <Message v-if="form.errors.pendidikan_terakhir" size="small" variant="simple" severity="error">
-                                        {{ form.errors.pendidikan_terakhir }}
-                                    </Message>
-                                </div>
-
-                                <div class="flex justify-end border-t border-gray-300 pt-6 dark:border-gray-600">
-                                    <Button
-                                        size="small"
-                                        label="Selanjutnya"
-                                        icon="pi pi-arrow-right"
-                                        @click="goTo('2')"
-                                        :disabled="!isStepValid('1')"
-                                        class="transition disabled:cursor-not-allowed disabled:opacity-50"
-                                    />
-                                </div>
-                            </div>
-
-                            <!-- Step 2 -->
-                            <div v-if="step === '2'" class="flex h-[70vh] flex-col">
-                                <!-- Daftar pertanyaan -->
-                                <div class="flex-1 space-y-6 overflow-y-auto pr-2">
-                                    <div
-                                        v-for="(pertanyaan, idx) in kuesioner.pertanyaan"
-                                        :key="pertanyaan.id"
-                                        class="border-b border-gray-300 pb-4 last:border-none dark:border-gray-600"
-                                    >
-                                        <p class="mb-2 font-medium">{{ idx + 1 }}. {{ pertanyaan.teks }}</p>
-
-                                        <!-- Radio -->
-                                        <div v-if="pertanyaan.tipe === 'radio'" class="flex flex-col gap-1">
-                                            <div v-for="opsi in pertanyaan.opsi_jawaban" :key="opsi.id" class="flex items-center gap-2">
-                                                <RadioButton
-                                                    :inputId="`opsi-${opsi.id}`"
-                                                    :value="opsi.id"
-                                                    :invalid="!!form.errors[`jawaban.${idx}.opsi_id`]"
-                                                    v-model="form.jawaban[idx].opsi_id"
-                                                />
-                                                <label :for="`opsi-${opsi.id}`">{{ opsi.teks }}</label>
-                                            </div>
-                                            <Message v-if="form.errors[`jawaban.${idx}.opsi_id`]" size="small" variant="simple" severity="error">
-                                                {{ form.errors[`jawaban.${idx}.opsi_id`] }}
-                                            </Message>
-                                        </div>
-
-                                        <!-- Checkbox -->
-                                        <div v-else-if="pertanyaan.tipe === 'checkbox'" class="flex flex-col gap-1">
-                                            <div v-for="opsi in pertanyaan.opsi_jawaban" :key="opsi.id" class="flex items-center gap-2">
-                                                <Checkbox
-                                                    :inputId="`opsi-${opsi.id}`"
-                                                    :value="opsi.id"
-                                                    :invalid="!!form.errors[`jawaban.${idx}.opsi_id`]"
-                                                    v-model="form.jawaban[idx].opsi_id"
-                                                />
-                                                <label :for="`opsi-${opsi.id}`">{{ opsi.teks }}</label>
-                                            </div>
-                                            <Message v-if="form.errors[`jawaban.${idx}.opsi_id`]" size="small" severity="error" variant="simple">
-                                                {{ form.errors[`jawaban.${idx}.opsi_id`] }}
-                                            </Message>
-                                        </div>
-
-                                        <!-- Text -->
-                                        <div v-else-if="pertanyaan.tipe === 'text'" class="flex flex-col gap-1">
+                        <ManualStepper
+                            ref="stepper"
+                            :steps="[
+                                { value: '1', label: 'Data Responden' },
+                                { value: '2', label: 'Pertanyaan' },
+                                { value: '3', label: 'Kritik & Saran' },
+                            ]"
+                        >
+                            <template #default="{ step, goTo }">
+                                <!-- Step 1 -->
+                                <div v-if="step === '1'" class="space-y-6">
+                                    <div class="flex flex-col gap-1">
+                                        <IftaLabel>
                                             <InputText
-                                                v-model="form.jawaban[idx].teks"
+                                                id="name"
+                                                v-model="form.name"
+                                                :invalid="!!form.errors.name"
                                                 class="w-full"
-                                                placeholder="Masukkan Jawaban"
-                                                :invalid="!!form.errors[`jawaban.${idx}.teks`]"
+                                                placeholder="Masukkan Nama"
+                                                variant="filled"
                                             />
-                                            <Message v-if="form.errors[`jawaban.${idx}.teks`]" size="small" variant="simple" severity="error">
-                                                {{ form.errors[`jawaban.${idx}.teks`] }}
-                                            </Message>
-                                        </div>
+                                            <label for="name">Nama</label>
+                                        </IftaLabel>
+                                        <Message v-if="form.errors.name" size="small" variant="simple" severity="error">{{
+                                            form.errors.name
+                                        }}</Message>
+                                    </div>
 
-                                        <!-- Number -->
-                                        <div v-else-if="pertanyaan.tipe === 'number'" class="flex flex-col gap-1">
+                                    <div class="flex flex-col gap-1">
+                                        <label>Jenis Kelamin</label>
+                                        <div class="mt-1 flex flex-col gap-4">
+                                            <div class="flex gap-2">
+                                                <RadioButton inputId="jkL" value="Laki-Laki" v-model="form.jk" :invalid="!!form.errors.jk" />
+                                                <label for="jkL">Laki-Laki</label>
+                                            </div>
+                                            <div class="flex gap-2">
+                                                <RadioButton inputId="jkP" value="Perempuan" v-model="form.jk" :invalid="!!form.errors.jk" />
+                                                <label for="jkP">Perempuan</label>
+                                            </div>
+                                        </div>
+                                        <Message v-if="form.errors.jk" size="small" variant="simple" severity="error">{{ form.errors.jk }}</Message>
+                                    </div>
+
+                                    <div class="flex flex-col gap-1">
+                                        <IftaLabel>
                                             <InputNumber
-                                                v-model="form.jawaban[idx].angka"
-                                                placeholder="Masukkan Angka"
+                                                v-model="form.umur"
+                                                :invalid="!!form.errors.umur"
                                                 class="w-full"
-                                                :invalid="!!form.errors[`jawaban.${idx}.angka`]"
+                                                placeholder="Masukkan Umur"
+                                                variant="filled"
                                             />
-                                            <Message v-if="form.errors[`jawaban.${idx}.angka`]" size="small" variant="simple" severity="error">
-                                                {{ form.errors[`jawaban.${idx}.angka`] }}
-                                            </Message>
-                                        </div>
+                                            <label>Umur</label>
+                                        </IftaLabel>
+                                        <Message v-if="form.errors.umur" size="small" variant="simple" severity="error">{{
+                                            form.errors.umur
+                                        }}</Message>
+                                    </div>
 
-                                        <!-- Date -->
-                                        <div v-else-if="pertanyaan.tipe === 'date'" class="flex flex-col gap-1">
-                                            <DatePicker
-                                                v-model="form.jawaban[idx].tanggal"
-                                                placeholder="Pilih Tanggal"
+                                    <div class="flex flex-col gap-1">
+                                        <IftaLabel>
+                                            <InputText
+                                                v-model="form.pekerjaan"
+                                                :invalid="!!form.errors.pekerjaan"
                                                 class="w-full"
-                                                :invalid="!!form.errors[`jawaban.${idx}.tanggal`]"
+                                                placeholder="Masukkan Pekerjaan"
+                                                variant="filled"
                                             />
-                                            <Message v-if="form.errors[`jawaban.${idx}.tanggal`]" size="small" variant="simple" severity="error">
-                                                {{ form.errors[`jawaban.${idx}.tanggal`] }}
-                                            </Message>
-                                        </div>
+                                            <label>Pekerjaan</label>
+                                        </IftaLabel>
+                                        <Message v-if="form.errors.pekerjaan" size="small" variant="simple" severity="error">
+                                            {{ form.errors.pekerjaan }}
+                                        </Message>
+                                    </div>
+
+                                    <div class="flex flex-col gap-1">
+                                        <IftaLabel>
+                                            <InputText
+                                                v-model="form.pendidikan_terakhir"
+                                                :invalid="!!form.errors.pendidikan_terakhir"
+                                                class="w-full"
+                                                placeholder="Masukkan Pendidikan Terakhir"
+                                                variant="filled"
+                                            />
+                                            <label>Pendidikan Terakhir</label>
+                                        </IftaLabel>
+                                        <Message v-if="form.errors.pendidikan_terakhir" size="small" variant="simple" severity="error">
+                                            {{ form.errors.pendidikan_terakhir }}
+                                        </Message>
+                                    </div>
+
+                                    <div class="flex justify-end border-t border-gray-300 pt-6 dark:border-gray-600">
+                                        <Button
+                                            size="small"
+                                            label="Selanjutnya"
+                                            icon="pi pi-arrow-right"
+                                            @click="goTo('2')"
+                                            :disabled="!isStepValid('1')"
+                                            class="transition disabled:cursor-not-allowed disabled:opacity-50"
+                                        />
                                     </div>
                                 </div>
 
-                                <!-- Tombol navigasi selalu fixed di bawah -->
-                                <div class="mt-4 flex justify-between border-t border-gray-300 pt-4 dark:border-gray-600">
-                                    <Button size="small" label="Sebelumnya" severity="secondary" icon="pi pi-arrow-left" @click="goTo('1')" />
-                                    <Button
-                                        size="small"
-                                        label="Selanjutnya"
-                                        icon="pi pi-arrow-right"
-                                        @click="goTo('3')"
-                                        :disabled="!isStepValid('2')"
-                                        class="transition disabled:cursor-not-allowed disabled:opacity-50"
-                                    />
-                                </div>
-                            </div>
+                                <!-- Step 2 -->
+                                <div v-if="step === '2'" class="flex h-[70vh] flex-col">
+                                    <!-- Daftar pertanyaan -->
+                                    <div class="flex-1 space-y-6 overflow-y-auto pr-2">
+                                        <div
+                                            v-for="(pertanyaan, idx) in kuesioner.pertanyaan"
+                                            :key="pertanyaan.id"
+                                            class="border-b border-gray-300 pb-4 last:border-none dark:border-gray-600"
+                                        >
+                                            <p class="mb-2 font-medium">{{ idx + 1 }}. {{ pertanyaan.teks }}</p>
 
-                            <!-- Step 3 -->
-                            <div v-if="step === '3'" class="space-y-4">
-                                <IftaLabel>
-                                    <Textarea v-model="form.kritik" class="w-full" rows="4" />
-                                    <label>Kritik</label>
-                                </IftaLabel>
-                                <IftaLabel>
-                                    <Textarea v-model="form.saran" class="w-full" rows="4" />
-                                    <label>Saran</label>
-                                </IftaLabel>
+                                            <!-- Radio -->
+                                            <div v-if="pertanyaan.tipe === 'radio'" class="flex flex-col gap-1">
+                                                <div v-for="opsi in pertanyaan.opsi_jawaban" :key="opsi.id" class="flex items-center gap-2">
+                                                    <RadioButton
+                                                        :inputId="`opsi-${opsi.id}`"
+                                                        :value="opsi.id"
+                                                        :invalid="!!form.errors[`jawaban.${idx}.opsi_id`]"
+                                                        v-model="form.jawaban[idx].opsi_id"
+                                                    />
+                                                    <label :for="`opsi-${opsi.id}`">{{ opsi.teks }}</label>
+                                                </div>
+                                                <Message v-if="form.errors[`jawaban.${idx}.opsi_id`]" size="small" variant="simple" severity="error">
+                                                    {{ form.errors[`jawaban.${idx}.opsi_id`] }}
+                                                </Message>
+                                            </div>
 
-                                <div class="flex justify-between border-t border-gray-300 pt-6 dark:border-gray-600">
-                                    <Button size="small" label="Sebelumnya" severity="secondary" icon="pi pi-arrow-left" @click="goTo('2')" />
-                                    <Button
-                                        size="small"
-                                        label="Kirim"
-                                        icon="pi pi-send"
-                                        @click="submitForm"
-                                        :loading="form.processing"
-                                        :disabled="!isStepValid('3')"
-                                        class="transition disabled:cursor-not-allowed disabled:opacity-50"
-                                    />
+                                            <!-- Checkbox -->
+                                            <div v-else-if="pertanyaan.tipe === 'checkbox'" class="flex flex-col gap-1">
+                                                <div v-for="opsi in pertanyaan.opsi_jawaban" :key="opsi.id" class="flex items-center gap-2">
+                                                    <Checkbox
+                                                        :inputId="`opsi-${opsi.id}`"
+                                                        :value="opsi.id"
+                                                        :invalid="!!form.errors[`jawaban.${idx}.opsi_id`]"
+                                                        v-model="form.jawaban[idx].opsi_id"
+                                                    />
+                                                    <label :for="`opsi-${opsi.id}`">{{ opsi.teks }}</label>
+                                                </div>
+                                                <Message v-if="form.errors[`jawaban.${idx}.opsi_id`]" size="small" severity="error" variant="simple">
+                                                    {{ form.errors[`jawaban.${idx}.opsi_id`] }}
+                                                </Message>
+                                            </div>
+
+                                            <!-- Text -->
+                                            <div v-else-if="pertanyaan.tipe === 'text'" class="flex flex-col gap-1">
+                                                <InputText
+                                                    v-model="form.jawaban[idx].teks"
+                                                    class="w-full"
+                                                    placeholder="Masukkan Jawaban"
+                                                    :invalid="!!form.errors[`jawaban.${idx}.teks`]"
+                                                />
+                                                <Message v-if="form.errors[`jawaban.${idx}.teks`]" size="small" variant="simple" severity="error">
+                                                    {{ form.errors[`jawaban.${idx}.teks`] }}
+                                                </Message>
+                                            </div>
+
+                                            <!-- Number -->
+                                            <div v-else-if="pertanyaan.tipe === 'number'" class="flex flex-col gap-1">
+                                                <InputNumber
+                                                    v-model="form.jawaban[idx].angka"
+                                                    placeholder="Masukkan Angka"
+                                                    class="w-full"
+                                                    :invalid="!!form.errors[`jawaban.${idx}.angka`]"
+                                                />
+                                                <Message v-if="form.errors[`jawaban.${idx}.angka`]" size="small" variant="simple" severity="error">
+                                                    {{ form.errors[`jawaban.${idx}.angka`] }}
+                                                </Message>
+                                            </div>
+
+                                            <!-- Date -->
+                                            <div v-else-if="pertanyaan.tipe === 'date'" class="flex flex-col gap-1">
+                                                <DatePicker
+                                                    v-model="form.jawaban[idx].tanggal"
+                                                    placeholder="Pilih Tanggal"
+                                                    class="w-full"
+                                                    :invalid="!!form.errors[`jawaban.${idx}.tanggal`]"
+                                                />
+                                                <Message v-if="form.errors[`jawaban.${idx}.tanggal`]" size="small" variant="simple" severity="error">
+                                                    {{ form.errors[`jawaban.${idx}.tanggal`] }}
+                                                </Message>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Tombol navigasi selalu fixed di bawah -->
+                                    <div class="mt-4 flex justify-between border-t border-gray-300 pt-4 dark:border-gray-600">
+                                        <Button size="small" label="Sebelumnya" severity="secondary" icon="pi pi-arrow-left" @click="goTo('1')" />
+                                        <Button
+                                            size="small"
+                                            label="Selanjutnya"
+                                            icon="pi pi-arrow-right"
+                                            @click="goTo('3')"
+                                            :disabled="!isStepValid('2')"
+                                            class="transition disabled:cursor-not-allowed disabled:opacity-50"
+                                        />
+                                    </div>
                                 </div>
-                            </div>
-                        </template>
-                    </ManualStepper>
+
+                                <!-- Step 3 -->
+                                <div v-if="step === '3'" class="space-y-4">
+                                    <IftaLabel>
+                                        <Textarea v-model="form.kritik" class="w-full" rows="4" />
+                                        <label>Kritik</label>
+                                    </IftaLabel>
+                                    <IftaLabel>
+                                        <Textarea v-model="form.saran" class="w-full" rows="4" />
+                                        <label>Saran</label>
+                                    </IftaLabel>
+
+                                    <div class="flex justify-between border-t border-gray-300 pt-6 dark:border-gray-600">
+                                        <Button size="small" label="Sebelumnya" severity="secondary" icon="pi pi-arrow-left" @click="goTo('2')" />
+                                        <Button
+                                            size="small"
+                                            label="Kirim"
+                                            icon="pi pi-send"
+                                            @click="submitForm"
+                                            :loading="form.processing"
+                                            :disabled="!isStepValid('3')"
+                                            class="transition disabled:cursor-not-allowed disabled:opacity-50"
+                                        />
+                                    </div>
+                                </div>
+                            </template>
+                        </ManualStepper>
+                    </template>
                 </div>
             </div>
         </main>

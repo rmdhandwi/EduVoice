@@ -88,6 +88,8 @@ class RespondenRequest extends FormRequest
             'name.required' => 'Nama wajib diisi.',
             'jk.required' => 'Jenis kelamin wajib dipilih.',
             'umur.required' => 'Umur wajib diisi.',
+            'umur.min' => 'Umur minimal 10 tahun.',
+            'umur.max' => 'Umur maximal 200 tahun.',
             'pekerjaan.required' => 'Pekerjaan wajib diisi.',
             'pendidikan_terakhir.required' => 'Pendidikan terakhir wajib diisi.',
             'jawaban.required' => 'Jawaban wajib diisi.',

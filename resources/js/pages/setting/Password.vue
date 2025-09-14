@@ -21,7 +21,7 @@ const submit = () => {
 </script>
 
 <template>
-    <div class="max-w-lg rounded-xl bg-white p-6 shadow dark:bg-gray-800">
+    <div class="max-w-lg rounded-xl bg-white p-6 shadow dark:bg-gray-800  animate-fade-in delay-300 ">
         <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-gray-100">Ubah Password</h2>
 
         <div class="space-y-4">
@@ -83,3 +83,28 @@ const submit = () => {
         </div>
     </div>
 </template>
+
+<style scoped>
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.animate-fade-in {
+    animation: fade-in 0.8s ease-out both;
+}
+.delay-100 {
+    animation-delay: 0.1s;
+}
+.delay-200 {
+    animation-delay: 0.2s;
+}
+.delay-300 {
+    animation-delay: 0.3s;
+}
+</style>
