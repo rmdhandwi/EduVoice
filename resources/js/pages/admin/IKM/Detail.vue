@@ -55,7 +55,7 @@ const breadcrumb = [{ label: 'IKM', route: 'ikm.index' }, { label: `${props.kues
 
             <!-- Tabel Unsur -->
             <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800">
-                <table class="w-full border-collapse text-sm">
+                <table v-if="unsurs.length" class="w-full border-collapse text-sm">
                     <thead class="bg-gradient-to-r from-indigo-500 to-blue-500 text-white">
                         <tr>
                             <th class="px-4 py-2 text-center">No</th>
@@ -78,10 +78,31 @@ const breadcrumb = [{ label: 'IKM', route: 'ikm.index' }, { label: `${props.kues
                         </tr>
                     </tbody>
                 </table>
+
+                <!-- Empty State -->
+                <div v-else class="p-8 text-center text-gray-500 dark:text-gray-400">
+                    <div class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700">
+                        <svg
+                            class="h-6 w-6 text-gray-400 dark:text-gray-300"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M9 17v-2h6v2m-7-4h8m-9-4h10M5 7h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V9a2 2 0 012-2z"
+                            />
+                        </svg>
+                    </div>
+                    <p class="font-semibold">Belum ada data unsur pelayanan</p>
+                </div>
             </div>
 
             <!-- Ringkasan -->
-            <div class="grid gap-6 md:grid-cols-4">
+            <div v-if="props.jumlah_responden > 0" class="grid gap-6 md:grid-cols-4">
                 <div
                     class="flex flex-col items-center rounded-xl border border-gray-200 bg-gradient-to-br from-green-50 to-green-100 p-6 shadow-md dark:from-green-900 dark:to-green-800"
                 >
@@ -106,7 +127,7 @@ const breadcrumb = [{ label: 'IKM', route: 'ikm.index' }, { label: `${props.kues
             </div>
 
             <!-- Mutu -->
-            <div class="flex flex-col items-center justify-center p-8 text-center">
+            <div v-if="mutu" class="flex flex-col items-center justify-center p-8 text-center">
                 <p class="text-sm text-gray-600 dark:text-gray-400">Mutu Pelayanan</p>
                 <div
                     class="mt-4 flex h-24 w-24 items-center justify-center rounded-full text-5xl font-extrabold shadow-md"
@@ -120,6 +141,10 @@ const breadcrumb = [{ label: 'IKM', route: 'ikm.index' }, { label: `${props.kues
                     {{ mutu.charAt(0) }}
                 </div>
                 <p class="mt-4 text-lg font-semibold text-gray-700 dark:text-gray-300">{{ getLabel(mutu) }}</p>
+            </div>
+
+            <div v-else class="p-8 text-center text-gray-500 dark:text-gray-400">
+                <p class="font-semibold">Belum ada data mutu</p>
             </div>
         </div>
     </DashboardLayout>

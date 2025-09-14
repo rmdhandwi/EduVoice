@@ -158,7 +158,7 @@ const deleteOne = (id: number) => {
         </div>
 
         <!-- Grid Cards -->
-        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 animate-fade-in delay-300">
+        <div class="animate-fade-in grid gap-6 delay-300 sm:grid-cols-2 lg:grid-cols-3">
             <div
                 v-for="k in kuesioners"
                 :key="k.id"
@@ -196,9 +196,27 @@ const deleteOne = (id: number) => {
         </div>
 
         <!-- Kosong -->
-        <div v-if="!kuesioners.length" class="mt-10 flex flex-col items-center justify-center text-gray-500">
-            <i class="pi pi-info-circle text-3xl"></i>
-            <p class="mt-2">Tidak ada kuesioner yang tersedia.</p>
+        <!-- Empty State -->
+        <div
+            v-if="!kuesioners.length"
+            class="flex flex-col items-center animate-fade-in delay-300 justify-center rounded-2xl border border-dashed border-gray-300 bg-gray-50 py-20 text-center text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400"
+        >
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="mb-4 h-14 w-14 text-gray-400 dark:text-gray-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 17v-2a4 4 0 00-4-4H3m6 6h6m0 0v-2a4 4 0 014-4h2m-6 6v2m0-2H9"
+                />
+            </svg>
+            <p class="text-base font-semibold">Belum ada data Kuesioner tersedia</p>
+            <p class="mt-1 text-sm text-gray-400 dark:text-gray-500">Silakan tambahkan data kuesioner</p>
         </div>
     </DashboardLayout>
 </template>
@@ -234,5 +252,3 @@ const deleteOne = (id: number) => {
     animation-delay: 0.3s;
 }
 </style>
-
-

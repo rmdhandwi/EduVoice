@@ -83,7 +83,7 @@ const onRowClick = (event: any) => {
                     dataKey="id"
                     paginator
                     :rows="10"
-                    class="cursor-pointer animate-fade-in delay-300"
+                    class="animate-fade-in cursor-pointer delay-300"
                     :rowsPerPageOptions="[5, 10, 20, 50]"
                     responsiveLayout="scroll"
                     scrollable
@@ -103,7 +103,7 @@ const onRowClick = (event: any) => {
                     <template #empty>
                         <div class="flex flex-col items-center justify-center p-6">
                             <i class="pi pi-info-circle !text-2xl text-gray-400"></i>
-                            <p class="mt-4 text-gray-600 dark:text-gray-300">Tidak ada responden yang tersedia.</p>
+                            <p class="mt-4 text-gray-600 dark:text-gray-300">Belum ada responden yang mengisi survei</p>
                         </div>
                     </template>
 
@@ -125,38 +125,74 @@ const onRowClick = (event: any) => {
                 </DataTable>
 
                 <!-- Mode Card -->
-                <div v-else class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 animate-fade-in delay-300">
-                    <div
-                        v-for="res in filteredRespondens"
-                        :key="res.id"
-                        :filters="filters"
-                        class="group hover:border-primary-300 dark:hover:border-primary-500 cursor-pointer rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg dark:border-gray-700 dark:bg-gray-800"
-                        @click="onRowClick({ data: res })"
-                    >
-                        <!-- Nama -->
-                        <h3
-                            class="group-hover:text-primary-600 dark:group-hover:text-primary-400 mb-1 text-lg font-semibold text-gray-800 dark:text-gray-100"
+                <div v-else>
+                    <div v-if="filteredRespondens.length" class="animate-fade-in grid gap-6 delay-300 sm:grid-cols-2 lg:grid-cols-3">
+                        <div
+                            v-for="res in filteredRespondens"
+                            :key="res.id"
+                            class="group hover:border-primary-300 dark:hover:border-primary-500 cursor-pointer rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg dark:border-gray-700 dark:bg-gray-800"
+                            @click="onRowClick({ data: res })"
                         >
-                            {{ res.name }}
-                        </h3>
+                            <!-- Header: Avatar + Nama -->
+                            <div class="flex items-center gap-4">
+                                <!-- Avatar (Inisial Nama) -->
+                                <div
+                                    class="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500 text-lg font-bold text-white shadow-md"
+                                >
+                                    {{ res.name?.charAt(0).toUpperCase() }}
+                                </div>
 
-                        <!-- Judul Kuesioner -->
-                        <p class="text-sm text-gray-600 dark:text-gray-300">
-                            {{ res.kuesioner_judul }}
-                        </p>
+                                <!-- Nama & Judul -->
+                                <div>
+                                    <h3
+                                        class="group-hover:text-primary-600 dark:group-hover:text-primary-400 mb-0.5 text-base font-semibold text-gray-800 transition-colors dark:text-gray-100"
+                                    >
+                                        {{ res.name }}
+                                    </h3>
+                                    <p class="text-sm text-gray-600 dark:text-gray-300">
+                                        {{ res.kuesioner_judul }}
+                                    </p>
+                                </div>
+                            </div>
 
-                        <!-- Tanggal -->
-                        <p class="mt-3 text-xs text-gray-500 dark:text-gray-400">
-                            {{
-                                new Date(res.created_at).toLocaleString('id-ID', {
-                                    year: 'numeric',
-                                    month: 'short',
-                                    day: 'numeric',
-                                    hour: '2-digit',
-                                    minute: '2-digit',
-                                })
-                            }}
-                        </p>
+                            <!-- Divider -->
+                            <div class="my-4 h-px w-full bg-gray-100 dark:bg-gray-700"></div>
+
+                            <!-- Tanggal -->
+                            <p class="text-xs text-gray-500 dark:text-gray-400">
+                                {{
+                                    new Date(res.created_at).toLocaleString('id-ID', {
+                                        year: 'numeric',
+                                        month: 'short',
+                                        day: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                    })
+                                }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Jika kosong -->
+                    <div
+                        v-else
+                        class="flex flex-col items-center justify-center animate-fade-in delay-300 rounded-xl border border-dashed border-gray-300 bg-gray-50 py-16 text-center text-gray-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="mb-3 h-12 w-12 text-gray-400 dark:text-gray-500"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M9 17v-2a4 4 0 00-4-4H3m6 6h6m0 0v-2a4 4 0 014-4h2m-6 6v2m0-2H9"
+                            />
+                        </svg>
+                        <p class="text-sm font-medium">Belum ada responden yang mengisi survei</p>
                     </div>
                 </div>
             </template>

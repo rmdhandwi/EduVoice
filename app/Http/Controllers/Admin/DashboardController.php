@@ -26,4 +26,12 @@ class DashboardController extends Controller
             'kuesioners' => $kuesioners,
         ]);
     }
+
+    public function ini()
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
+        }
+        return Inertia::render('ErrorPage');
+    }
 }

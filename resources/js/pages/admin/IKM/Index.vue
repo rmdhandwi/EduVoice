@@ -30,7 +30,7 @@ function getLabel(mutu: string) {
 
         <div class="space-y-6 p-6">
             <!-- Grid Kartu -->
-            <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div v-if="ikms.length" class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                 <template v-for="(ikm, i) in ikms" :key="ikm.id">
                     <Button
                         as="a"
@@ -100,6 +100,29 @@ function getLabel(mutu: string) {
                         </div>
                     </Button>
                 </template>
+            </div>
+
+            <!-- Empty State -->
+            <div
+                v-else
+                class="flex flex-col items-center justify-center rounded-2xl border border-dashed border-gray-300 bg-gray-50 py-20 text-center text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="mb-4 h-14 w-14 text-gray-400 dark:text-gray-500"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 17v-2a4 4 0 00-4-4H3m6 6h6m0 0v-2a4 4 0 014-4h2m-6 6v2m0-2H9"
+                    />
+                </svg>
+                <p class="text-base font-semibold">Belum ada data IKM tersedia</p>
+                <p class="mt-1 text-sm text-gray-400 dark:text-gray-500">Silakan tambahkan data baru untuk melihat hasil survei.</p>
             </div>
         </div>
     </DashboardLayout>
